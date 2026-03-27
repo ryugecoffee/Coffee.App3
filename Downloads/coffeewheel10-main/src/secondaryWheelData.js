@@ -6,8 +6,7 @@ const secondaryWheelData = [
       {
         label: "AROMA",
         color: "#1f1f1f",
-        noSplit: true,
-        children: ["ROUND", "INTENSE"],
+        children: ["Intense (I)", "Dense (Q)", "Rounded (Q)"],
       },
       {
         label: "TASTE",
@@ -16,12 +15,12 @@ const secondaryWheelData = [
           {
             label: "ACIDITY",
             color: "#252525",
-            children: ["BRIGHT", "CRISP"],
+            children: ["Mellow (Q)", "Light (I)", "Balanced (I)"],
           },
           {
             label: "SWEETNESS",
             color: "#2c2c2c",
-            children: ["CANDIED", "BALANCED"],
+            children: ["Hight (I)", "Vanilla (Q)", "Candied (Q)"],
           },
         ],
       },
@@ -32,20 +31,24 @@ const secondaryWheelData = [
           {
             label: "TEXTURE",
             color: "#353535",
-            children: ["ROUND", "SMOOTH"],
+            children: ["Syrupy (I)", "Creamy (Q)", "Velvety (Q)"],
           },
           {
             label: "BODY",
             color: "#3d3d3d",
-            children: ["SYRUPY", "HEAVY"],
+            children: ["Heavy (W)", "Thick (Q)", "Round (Q)"],
           },
         ],
       },
       {
         label: "AFTERTASTE",
         color: "#242424",
-        noSplit: true,
-        children: ["LINGERING", "LONG"],
+        children: [
+          "Long (L)",
+          "Lingering (L)",
+          "Rounded (Q)",
+          "Intense (Q)",
+        ],
       },
     ],
   },

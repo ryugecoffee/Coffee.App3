@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     marginBottom: 24,
-    fontWeight: 700,
+    fontWeight: "700",
   },
 
   section: {
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
 
   value: {
     fontSize: 16,
-    fontWeight: 600,
+    fontWeight: "600",
   },
 });
 
-export default function FlavorNotePDF({ note }) {
+export default function FlavorNotePDF({ note = {} }) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>

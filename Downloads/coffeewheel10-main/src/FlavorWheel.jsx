@@ -321,17 +321,11 @@ function FlavorWheel({
 
   const secondaryRing1Inner = 105;
   const secondaryRing1Outer = 180;
-
   const secondaryRing2Inner = 184;
   const secondaryRing2Outer = 248;
-
   const secondaryRing3Inner = 252;
   const secondaryRing3Outer = 305;
-
-  const secondaryRing4Inner = 309;
-  const secondaryRing4Outer = 350;
-
-  const secondaryOuterLabelRadius = 374;
+  const secondaryOuterLabelRadius = 330;
 
   const secondaryRing1TextRadius =
     (secondaryRing1Inner + secondaryRing1Outer) / 2;
@@ -517,33 +511,52 @@ function FlavorWheel({
             });
           });
         });
-     } else {
-  // 🔥 AROMA / AFTERTASTE は3周目を作らない
-  if (mid.label === "AROMA" || mid.label === "AFTERTASTE") {
-    return;
-  }
+      } else {
 
-  const leaves = midChildren.length > 0 ? midChildren : [mid.label];
-  const leafAngle = (midEnd - midStart) / leaves.length;
+        const leaves = midChildren.length > 0 ? midChildren : [mid.label];
+        const leafAngle = (midEnd - midStart) / leaves.length;
 
-  leaves.forEach((leaf, leafIndex) => {
-    const leafStart = midStart + leafAngle * leafIndex;
-    const leafEnd = leafStart + leafAngle;
+        leaves.forEach((leaf, leafIndex) => {
+          const leafStart = midStart + leafAngle * leafIndex;
+          const leafEnd = leafStart + leafAngle;
 
-    secondaryLeafSegments.push({
-      label: leaf,
-      color: mid.color,
-      start: leafStart,
-      end: leafEnd,
-      parentTop: top.label,
-      parentMid: mid.label,
-      parentInner: null,
+          secondaryLeafSegments.push({
+            label: leaf,
+            color: mid.color,
+            start: leafStart,
+            end: leafEnd,
+            parentTop: top.label,
+            parentMid: mid.label,
+            parentInner: null,
+          });
+        });
+      }
     });
+  }
+const secondaryLeafBlockSegments = useMemo(() => {
+  const grouped = new Map();
+
+  secondaryLeafSegments.forEach((seg) => {
+    if (seg.parentMid === "AROMA" || seg.parentMid === "AFTERTASTE") return;
+
+    const key = seg.parentInner || seg.parentMid;
+
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        ...seg,
+        start: seg.start,
+        end: seg.end,
+      });
+      return;
+    }
+
+    const existing = grouped.get(key);
+    existing.start = Math.min(existing.start, seg.start);
+    existing.end = Math.max(existing.end, seg.end);
   });
-}
-    });
-  }
 
+  return Array.from(grouped.values());
+}, [secondaryLeafSegments]);
   useEffect(() => {
     if (isSecondaryWheel) {
       const validTopLabels = secondaryTopSegments.map((seg) => seg.label);
@@ -881,33 +894,34 @@ function FlavorWheel({
         >
           {isSecondaryWheel ? (
             <>
-              {secondaryLeafSegments.map((seg, index) => {
-                const isClickable =
-                  mainSelections.includes(seg.parentTop) &&
-                  selectedMids.includes(seg.parentMid);
-                const isSelected = secondarySelections.includes(seg.label);
-                const isDeep = !!seg.parentInner;
+{secondaryLeafBlockSegments.map((seg, index) => {
+  if (seg.parentMid === "AROMA" || seg.parentMid === "AFTERTASTE") return null;
 
-                return (
-                  <path
-                    key={`sr4-${index}`}
-                    d={arcPath(
-                      cx,
-                      cy,
-                      isDeep ? secondaryRing4Inner : secondaryRing3Inner,
-                      isDeep ? secondaryRing4Outer : secondaryRing3Outer,
-                      seg.start,
-                      seg.end
-                    )}
-                    fill={seg.color}
-                    stroke="#e7e3dd"
-                    strokeWidth={isSelected ? "4" : "2.5"}
-                    opacity={getSecondaryRing3Opacity(seg)}
-                    onClick={isClickable ? () => handleLeafClick(seg) : undefined}
-                    style={{ cursor: isClickable ? "pointer" : "default" }}
-                  />
-                );
-              })}
+  const isClickable =
+    mainSelections.includes(seg.parentTop) &&
+    selectedMids.includes(seg.parentMid);
+  const isSelected = secondarySelections.includes(seg.label);
+
+  return (
+    <path
+      key={`sr4-${index}`}
+      d={arcPath(
+        cx,
+        cy,
+        secondaryRing3Inner,
+        secondaryRing3Outer,
+        seg.start,
+        seg.end
+      )}
+      fill={seg.color}
+      stroke="#e7e3dd"
+      strokeWidth={isSelected ? "4" : "2.5"}
+      opacity={getSecondaryRing3Opacity(seg)}
+      onClick={isClickable ? () => handleLeafClick(seg) : undefined}
+      style={{ cursor: isClickable ? "pointer" : "default" }}
+    />
+  );
+})}
 
               {secondaryInnerSegments.map((seg, index) => {
                 const isClickable =
@@ -1097,14 +1111,10 @@ function FlavorWheel({
             ring1Segments.map((seg, index) => {
               const midAngle = (seg.start + seg.end) / 2;
               const pos = textPoint(cx, cy, 130, midAngle);
-              const rotation = getTextRotation(midAngle);
               const lines = seg.label.split("\n");
 
               return (
-                <g
-                  key={`t1-${index}`}
-                  transform={undefined}
-                >
+                <g key={`t1-${index}`}>
                   {lines.map((line, i) => (
                     <text
                       key={i}
@@ -1172,7 +1182,6 @@ function FlavorWheel({
             ring3Segments.map((seg, index) => {
               const midAngle = (seg.start + seg.end) / 2;
               const pos = textPoint(cx, cy, outerLabelRadius, midAngle);
-
               const isLeftSide = midAngle > 180;
               const rotation = isLeftSide ? midAngle + 90 : midAngle - 90;
               const anchor = isLeftSide ? "end" : "start";
@@ -1201,7 +1210,7 @@ function FlavorWheel({
 
           {isSecondaryWheel &&
             secondaryTopSegments.map((seg, index) => {
-              const midAngle = (seg.start + seg.end) / 2;
+              const midAngle = (seg.start + seg.end) / 3;
               const pos = textPoint(cx, cy, secondaryRing1TextRadius, midAngle);
               const rotation = getTextRotation(midAngle);
               const lines = seg.label.split("\n");
@@ -1209,7 +1218,7 @@ function FlavorWheel({
               return (
                 <g
                   key={`st1-${index}`}
-                  transform={`rotate(${rotation} ${pos.x} ${pos.y})`}
+                  
                 >
                   {lines.map((line, i) => (
                     <text
@@ -1244,7 +1253,7 @@ function FlavorWheel({
               return (
                 <g
                   key={`st2-${index}`}
-                  transform={`rotate(${rotation} ${pos.x} ${pos.y})`}
+                  
                 >
                   {lines.map((line, i) => (
                     <text
@@ -1278,7 +1287,7 @@ function FlavorWheel({
               return (
                 <g
                   key={`st3-${index}`}
-                  transform={`rotate(${rotation} ${pos.x} ${pos.y})`}
+                  
                 >
                   <text
                     x={pos.x}
