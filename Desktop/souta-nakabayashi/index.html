@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sohta Nakabayashi · Guitarra Clásica</title>
+<meta name="description" content="Sitio oficial de Sohta Nakabayashi (中林奏太), guitarrista clásico japonés afincado en España." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Sohta Nakabayashi · Guitarra Clásica" />
+<meta property="og:description" content="Guitarrista clásico japonés afincado en España. Más de 11 primeros premios en competiciones internacionales." />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_ES" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --black-red: #1a0a0a;
+    --carmen: #c41e3a;
+    --gold: #d4af37;
+    --plaster: #f5efe6;
+    --plaster-dim: rgba(245, 239, 230, 0.62);
+    --plaster-faint: rgba(245, 239, 230, 0.38);
+    --serif: "Playfair Display", Georgia, serif;
+    --sans: "Jost", system-ui, sans-serif;
+    --nav-h: 84px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black-red);
+    color: var(--plaster);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--carmen); color: var(--plaster); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 4.5rem);
+    background: transparent;
+    transition: background 0.5s ease, border-color 0.5s ease, height 0.4s ease;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(26, 10, 10, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.22);
+    height: 68px;
+  }
+  .nav__logo {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .nav__logo span { color: var(--carmen); }
+  .nav__links {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    list-style: none;
+  }
+  .nav__links a {
+    font-size: 0.74rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--plaster-dim);
+    position: relative;
+    padding: 0.4rem 0;
+    transition: color 0.3s ease;
+  }
+  .nav__links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.35s ease;
+  }
+  .nav__links a:hover { color: var(--plaster); }
+  .nav__links a:hover::after { width: 100%; }
+
+  .nav__toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--plaster);
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    padding: 6px;
+  }
+  .nav__toggle span {
+    display: block;
+    width: 26px; height: 1.5px;
+    background: var(--plaster);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav.open .nav__toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav.open .nav__toggle span:nth-child(2) { opacity: 0; }
+  .nav.open .nav__toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 620px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: #000;
+  }
+  /* Scale iframe to always cover viewport (16:9) */
+  .hero__video iframe {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100vw;
+    height: 56.25vw;          /* 16:9 based on width */
+    min-height: 100vh;
+    min-width: 177.78vh;      /* 16:9 based on height */
+    transform: translate(-50%, -50%);
+    border: 0;
+  }
+  .hero__poster {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--black-red);
+    display: none;
+  }
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(to bottom, rgba(26,10,10,0.55) 0%, rgba(26,10,10,0.30) 35%, rgba(26,10,10,0.65) 100%),
+      radial-gradient(120% 90% at 30% 50%, rgba(26,10,10,0.25) 0%, rgba(26,10,10,0.78) 100%);
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    padding: 0 clamp(1.5rem, 8vw, 8rem);
+    max-width: 1100px;
+  }
+  .hero__sub {
+    font-size: clamp(0.8rem, 1.6vw, 1rem);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.4rem;
+    padding-left: 0.2rem;
+  }
+  .hero__title {
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(2.8rem, 9vw, 8.5rem);
+    line-height: 0.94;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+  .hero__title .line2 {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--plaster);
+    text-stroke: 1px var(--plaster);
+  }
+  .hero__meta {
+    margin-top: 2.2rem;
+    font-size: clamp(0.78rem, 1.4vw, 0.95rem);
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--plaster-dim);
+  }
+  .hero__meta .dot { color: var(--carmen); margin: 0 0.5em; }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 2.2rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-size: 0.62rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--plaster-faint);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .hero__scroll::after {
+    content: "";
+    width: 1px; height: 46px;
+    background: linear-gradient(var(--gold), transparent);
+    animation: scrollpulse 2.2s ease-in-out infinite;
+  }
+  @keyframes scrollpulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ---------- Sections ---------- */
+  .section {
+    padding: clamp(5rem, 12vh, 9rem) clamp(1.5rem, 8vw, 8rem);
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .divider {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 1px;
+    border: 0;
+    background: linear-gradient(to right, transparent, rgba(196,30,58,0.55) 18%, rgba(212,175,55,0.55) 82%, transparent);
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--carmen);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 38px; height: 1px;
+    background: var(--carmen);
+    display: inline-block;
+  }
+
+  .section__title {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5.5vw, 4.2rem);
+    line-height: 1.02;
+    margin-bottom: 2.6rem;
+    letter-spacing: 0.005em;
+  }
+  .section__title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* Biografía — asymmetric */
+  .bio {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .bio__lead {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+    line-height: 1.4;
+    color: var(--plaster);
+    max-width: 22ch;
+  }
+  .bio__body {
+    grid-column: 1;
+    max-width: 62ch;
+    margin-left: auto;
+    font-size: clamp(1rem, 1.3vw, 1.12rem);
+    color: var(--plaster-dim);
+  }
+  @media (min-width: 880px) {
+    .bio {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .bio__body { grid-column: 2; }
+    .bio__lead { grid-column: 1; }
+  }
+
+  /* Premios */
+  .premios__sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.25rem, 2.4vw, 1.9rem);
+    color: var(--gold);
+    margin-bottom: 3rem;
+    max-width: 28ch;
+  }
+  .award-list { list-style: none; }
+  .award-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 1.4rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(245,239,230,0.12);
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    transition: padding-left 0.4s ease, color 0.4s ease;
+  }
+  .award-list li:last-child { border-bottom: 1px solid rgba(245,239,230,0.12); }
+  .award-list li:hover { padding-left: 1rem; color: var(--plaster); }
+  .award-list .num {
+    font-family: var(--serif);
+    font-size: 0.85rem;
+    color: var(--carmen);
+    letter-spacing: 0.1em;
+    min-width: 2.4ch;
+    flex-shrink: 0;
+  }
+  .award-list .award-place { font-weight: 400; }
+  .award-list .award-place strong {
+    font-weight: 500;
+    color: var(--gold);
+    font-family: var(--serif);
+  }
+
+  /* Conciertos timeline */
+  .timeline { list-style: none; position: relative; }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(var(--carmen), var(--gold), transparent);
+  }
+  .timeline li {
+    position: relative;
+    padding: 0 0 2.6rem 2.8rem;
+  }
+  .timeline li:last-child { padding-bottom: 0; }
+  .timeline li::before {
+    content: "";
+    position: absolute;
+    left: 1px; top: 7px;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--black-red);
+    border: 1.5px solid var(--gold);
+  }
+  .timeline li:first-child::before { border-color: var(--carmen); background: var(--carmen); }
+  .timeline .ev-name {
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 2vw, 1.6rem);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  .timeline .ev-place {
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    color: var(--plaster-dim);
+    margin-top: 0.4rem;
+  }
+
+  /* Contacto */
+  .contacto { text-align: left; }
+  .contacto__text {
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    color: var(--plaster-dim);
+    margin-bottom: 2.4rem;
+    max-width: 40ch;
+  }
+  .contacto__mail {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+    font-weight: 500;
+    display: inline-block;
+    color: var(--plaster);
+    border-bottom: 1px solid rgba(212,175,55,0.4);
+    padding-bottom: 0.2rem;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    word-break: break-word;
+  }
+  .contacto__mail:hover { color: var(--gold); border-color: var(--gold); }
+  .contacto__social {
+    margin-top: 2.6rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--plaster-dim);
+  }
+  .contacto__social a { color: var(--gold); transition: color 0.3s ease; }
+  .contacto__social a:hover { color: var(--carmen); }
+
+  /* Footer */
+  .footer {
+    padding: 3rem clamp(1.5rem, 8vw, 8rem);
+    border-top: 1px solid rgba(212,175,55,0.18);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: var(--plaster-faint);
+    text-transform: uppercase;
+  }
+  .footer__brand {
+    font-family: var(--serif);
+    letter-spacing: 0.24em;
+  }
+  .footer__brand span { color: var(--carmen); }
+
+  /* Mute button */
+  .mute-btn {
+    position: fixed;
+    bottom: 1.6rem; right: 1.6rem;
+    z-index: 120;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.5);
+    background: rgba(26,10,10,0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--plaster);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+  }
+  .mute-btn:hover { border-color: var(--gold); transform: scale(1.08); }
+  .mute-btn svg { width: 20px; height: 20px; }
+  .mute-btn .icon-unmute { display: none; }
+  .mute-btn.is-unmuted .icon-mute { display: none; }
+  .mute-btn.is-unmuted .icon-unmute { display: block; }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(34px);
+    transition: opacity 1s cubic-bezier(0.22,1,0.36,1), transform 1s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal[data-delay="1"] { transition-delay: 0.12s; }
+  .reveal[data-delay="2"] { transition-delay: 0.24s; }
+  .reveal[data-delay="3"] { transition-delay: 0.36s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+    .hero__scroll::after { animation: none; }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 760px) {
+    .nav__toggle { display: flex; }
+    .nav__links {
+      position: fixed;
+      top: 0; right: 0;
+      height: 100vh;
+      width: min(78vw, 320px);
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.2rem;
+      padding: 0 2.4rem;
+      background: rgba(26,10,10,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-left: 1px solid rgba(212,175,55,0.22);
+      transform: translateX(100%);
+      transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+    }
+    .nav.open .nav__links { transform: translateX(0); }
+    .nav__links a { font-size: 1rem; }
+
+    /* On mobile show black poster fallback instead of video */
+    .hero__video { display: none; }
+    .hero__poster { display: block; }
+    .mute-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav__logo">Sohta <span>·</span> Nakabayashi</a>
+  <button class="nav__toggle" id="navToggle" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav__links" id="navLinks">
+    <li><a href="#biografia">Biografía</a></li>
+    <li><a href="#premios">Premios</a></li>
+    <li><a href="#conciertos">Conciertos</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <div class="hero__video" id="heroVideo"><div id="ytplayer"></div></div>
+  <div class="hero__poster" aria-hidden="true"></div>
+  <div class="hero__overlay"></div>
+  <div class="hero__inner">
+    <p class="hero__sub reveal visible">Guitarra Clásica</p>
+    <h1 class="hero__title reveal visible" data-delay="1">
+      Sohta
+      <span class="line2">Nakabayashi</span>
+    </h1>
+    <p class="hero__meta reveal visible" data-delay="2">
+      Japón <span class="dot">·</span> España
+    </p>
+  </div>
+  <div class="hero__scroll">Scroll</div>
+</header>
+
+<!-- BIOGRAFÍA -->
+<main>
+<section class="section" id="biografia">
+  <p class="eyebrow reveal">01 — Perfil</p>
+  <h2 class="section__title reveal" data-delay="1">Biografía</h2>
+  <div class="bio">
+    <p class="bio__lead reveal" data-delay="1">Un sonido delicado y expresivo desde Japón hacia los escenarios de Europa.</p>
+    <p class="bio__body reveal" data-delay="2">
+      Nacido en Japón, Sohta Nakabayashi es uno de los guitarristas clásicos jóvenes
+      más destacados de su generación. Actualmente estudia en el Centro Superior de
+      Enseñanza Musical Katarina Gurska en España, donde perfecciona su arte bajo la
+      influencia de las grandes tradiciones guitarrísticas europeas. Su sonido delicado
+      y expresivo eleva al público hacia una experiencia sensorial única a través de la música.
+    </p>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- PREMIOS -->
+<section class="section" id="premios">
+  <p class="eyebrow reveal">02 — Reconocimientos</p>
+  <h2 class="section__title reveal" data-delay="1">Premios <em>Internacionales</em></h2>
+  <p class="premios__sub reveal" data-delay="1">Más de 11 primeros premios en competiciones internacionales</p>
+  <ul class="award-list">
+    <li class="reveal">
+      <span class="num">I</span>
+      <span class="award-place"><strong>Primer Premio</strong> — Certamen Internacional de Guitarra Llobet de Barcelona</span>
+    </li>
+    <li class="reveal" data-delay="1">
+      <span class="num">II</span>
+      <span class="award-place"><strong>Finalista</strong> — [competición placeholder]</span>
+    </li>
+    <li class="reveal" data-delay="2">
+      <span class="num">III</span>
+      <span class="award-place"><strong>Premio Especial</strong> — [competición placeholder]</span>
+    </li>
+  </ul>
+</section>
+
+<hr class="divider" />
+
+<!-- CONCIERTOS -->
+<section class="section" id="conciertos">
+  <p class="eyebrow reveal">03 — Agenda</p>
+  <h2 class="section__title reveal" data-delay="1">Conciertos <em>Recientes</em></h2>
+  <ul class="timeline">
+    <li class="reveal">
+      <p class="ev-name">Festival Internacional de Guitarra Emilio Pujol</p>
+    </li>
+    <li class="reveal" data-delay="1">
+      <p class="ev-name">Festival de Guitarra de la Ciudad de Elx</p>
+    </li>
+    <li class="reveal" data-delay="2">
+      <p class="ev-name">Garrigues Guitarfest 2025</p>
+      <p class="ev-place">Església Sant Salvador, Torrebesses</p>
+    </li>
+    <li class="reveal" data-delay="3">
+      <p class="ev-name">[lugar placeholder]</p>
+      <p class="ev-place">[fecha placeholder]</p>
+    </li>
+  </ul>
+</section>
+
+<hr class="divider" />
+
+<!-- CONTACTO -->
+<section class="section contacto" id="contacto">
+  <p class="eyebrow reveal">04 — Contacto</p>
+  <h2 class="section__title reveal" data-delay="1">Contacto</h2>
+  <p class="contacto__text reveal" data-delay="1">Para consultas de conciertos y colaboraciones</p>
+  <a class="contacto__mail reveal" data-delay="2" href="mailto:contacto@sohtanakabayashi.com">contacto@sohtanakabayashi.com</a>
+  <p class="contacto__social reveal" data-delay="2">
+    Instagram — <a href="https://instagram.com/sohtanakabayashi" target="_blank" rel="noopener">@sohtanakabayashi</a>
+  </p>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer__brand">Sohta <span>·</span> Nakabayashi</span>
+  <span>© 2025 Sohta Nakabayashi. Todos los derechos reservados.</span>
+</footer>
+
+<!-- MUTE BUTTON -->
+<button class="mute-btn" id="muteBtn" aria-label="Activar sonido" title="Activar / silenciar sonido">
+  <svg class="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+  </svg>
+  <svg class="icon-unmute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+  </svg>
+</button>
+
+<script>
+  /* ---------- Navbar scroll state ---------- */
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ---------- Mobile menu ---------- */
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  navLinks.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => {
+      nav.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    })
+  );
+
+  /* ---------- Reveal on scroll ---------- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => io.observe(el));
+
+  /* ---------- YouTube IFrame API (desktop only) ---------- */
+  let player = null;
+  const isMobile = window.matchMedia('(max-width: 760px)').matches;
+  const VIDEO_ID = 'PFlrFLjy4O8';
+
+  if (!isMobile) {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player('ytplayer', {
+      videoId: VIDEO_ID,
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        loop: 1,
+        controls: 0,
+        playlist: VIDEO_ID,   // required for loop
+        playsinline: 1,
+        rel: 0,
+        showinfo: 0,
+        modestbranding: 1,
+        iv_load_policy: 3,
+        disablekb: 1,
+        fs: 0
+      },
+      events: {
+        onReady: (e) => { e.target.mute(); e.target.playVideo(); },
+        onStateChange: (e) => {
+          // Safety net: restart if it ever ends
+          if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
+        }
+      }
+    });
+  };
+
+  /* ---------- Mute toggle ---------- */
+  const muteBtn = document.getElementById('muteBtn');
+  muteBtn.addEventListener('click', () => {
+    if (!player || typeof player.isMuted !== 'function') return;
+    if (player.isMuted()) {
+      player.unMute();
+      player.setVolume(100);
+      muteBtn.classList.add('is-unmuted');
+      muteBtn.setAttribute('aria-label', 'Silenciar sonido');
+    } else {
+      player.mute();
+      muteBtn.classList.remove('is-unmuted');
+      muteBtn.setAttribute('aria-label', 'Activar sonido');
+    }
+  });
+</script>
+</body>
+</html>
