@@ -1,0 +1,26 @@
+{
+  "job_id": "20260826-enma-001",
+  "provider": "MESHY",
+  "kind": "MULTI_IMAGE_TO_3D",
+  "title": "Enma gacha prototype",
+  "source": "CHATGPT",
+  "images": [
+    "front.jpg",
+    "side-a.jpg",
+    "side-b.jpg"
+  ],
+  "target_formats": [
+    "glb",
+    "stl",
+    "3mf"
+  ],
+  "ai_model": "latest",
+  "should_texture": true,
+  "enable_pbr": true,
+  "should_remesh": true,
+  "image_enhancement": false,
+  "metadata": {
+    "purpose": "gacha-scale resin print prototype",
+    "manager": "MAX"
+  }
+}
