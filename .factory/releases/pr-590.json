@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "request_id": "2f3c8f4e-0dc4-4b7a-9bd4-4ecf26920590",
+  "requested_by": "ryugecoffee",
+  "requested_at": "2026-10-04T19:39:00.000Z",
+  "request_mode": "PRODUCTION_REQUESTED",
+  "repository": "ryuge-inc/ryuge-web-factory",
+  "branch": "fix/vercel-release-reconciliation-cron-20261004",
+  "pull_request": 590
+}
